@@ -2,6 +2,6 @@ export interface ITodo {
   id: string
   title: string
   completed: boolean
-  getFullTitle: () => string
+  toString: () => string
   toggleCompleted: () => void
 }
