@@ -7,7 +7,7 @@
 <style></style>
 
 <script setup lang="ts">
-  import { type Ref } from 'vue'
+  import { computed, watch, type Ref } from 'vue'
   import TodoListItem from './TodoListItem.vue'
   import { useTodoStore } from './useTodoStore'
   import { Todo } from './Todo'
@@ -16,8 +16,16 @@
    * DESTRUCTURING POSSIBLE ONLY IF getTodos WRITTEN AS A FUNCTION EXPRESSION --> IT BECOMES A PROPERTY OF THE INSTANCE,
    * INSTEAD OF FUNCTION DECLARATION --> IT IS PART OF THE PROTOTYPE OF THE INSTANCE
    */
-  const { getAll, add } = useTodoStore()
+  const { getAll, set, remove, getById } = useTodoStore()
   const todos: Ref<Todo[]> = getAll()
 
-  add(new Todo({ id: '99', title: 'abcd', completed: false }))
+  setTimeout(async () => {
+    const t = getById('1')
+    watch(t, (newTodo, oldTodo) => {
+      console.log(oldTodo)
+      console.log(newTodo)
+    })
+    await set(new Todo({ id: '1', title: 'set todo!', completed: true }))
+    // remove('1')
+  }, 2000)
 </script>
