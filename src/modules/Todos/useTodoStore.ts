@@ -1,71 +1,60 @@
 import { ref, type Ref } from 'vue'
 import type { ITodo } from './ITodo'
-import { getMockData, setMockData } from './TodoMockData'
 import { Todo } from './Todo'
 import type { ITodoData } from './ITodoData'
+import { simultatedHttpGet, simultatedHttpPost } from './TodoMockData'
 
-function simultatedHttpGet(delay: number): Promise<ITodoData[]> {
-  return new Promise<ITodoData[]>((resolve) => {
-    setTimeout(() => {
-      resolve(getMockData())
-    }, delay)
-  })
+interface IListStore<T> {
+  getAll: () => Ref<T[]>
+  add: (item: T) => Promise<void>
+  remove: (id: string) => Promise<void>
 }
 
-function simultatedHttpPost(delay: number, todos: ITodoData[]): Promise<void> {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      setMockData(todos)
-      resolve()
-    }, delay)
-  })
-}
-
-class UseTodoStore {
+class UseTodoStore implements IListStore<ITodo> {
   private todos: Ref<ITodo[]> = ref([])
 
   constructor() {
-    this.fetchTodos()
+    this.fetchAll()
   }
 
-  async fetchTodos(): Promise<ITodo[]> {
-    const datas = await simultatedHttpGet(300)
+  async fetchAll(): Promise<ITodo[]> {
+    const datas = await simultatedHttpGet()
     const newTodos = datas.map((d) => new Todo(d))
-    this.todos.value = newTodos
-    console.log('todos have been fetched, from class!!')
+    this.todos.value = [...this.todos.value, ...newTodos]
+    console.log('todos have been fetched!')
     return newTodos
   }
 
-  private async saveTodos(): Promise<void> {
+  private async saveAll(): Promise<void> {
     const todoDatas: ITodoData[] = this.todos.value.map((t) => {
       const { id, title, completed } = t
       return { id, title, completed }
     })
-    await simultatedHttpPost(200, todoDatas)
-    console.log('todos has been saved')
+    await simultatedHttpPost(todoDatas)
+    console.log('todos has been saved!')
   }
 
   /*
    * WRITING IT AS A FUNCTION DECLARATION WILL PREVENT THE USE OF DESTRUCTURING WHEN USING useTodoStore, SINCE IT WILL BE PART OF THE PROTOTYPE OF THE INSTANCE.
    */
-  // getTodos(): Ref<ITodo[]> {
+  // getAll(): Ref<ITodo[]> {
   //   return this.todos
   // }
   /*
    * PREFER FUNCTION EXPRESSION, SINCE IT BECOME A PROPERTY OF THE INSTANCE AND THUS DESTRUCTURING WILL BE POSSIBLE!
    */
-  getTodos = (): Ref<ITodo[]> => {
+  getAll = (): Ref<ITodo[]> => {
     return this.todos
   }
 
-  addTodo = async (todo: ITodo) => {
+  add = async (todo: ITodo) => {
     this.todos.value.push(todo)
-    await this.saveTodos()
+    await this.saveAll()
   }
 
-  removeTodoById = async (id: string) => {
+  remove = async (id: string) => {
     this.todos.value = this.todos.value.filter((t) => t.id !== id)
-    this.saveTodos()
+    this.saveAll()
   }
 }
 
