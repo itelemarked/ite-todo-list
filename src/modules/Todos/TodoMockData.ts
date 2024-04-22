@@ -1,4 +1,4 @@
-import type { ITodoData } from './ITodoData'
+import type { ITodoData } from './Todo.model'
 
 let MOCK_DATA: ITodoData[] = [
   { id: '0', title: 'first todo', completed: true },

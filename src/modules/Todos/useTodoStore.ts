@@ -1,7 +1,5 @@
-import { computed, ref, toRef, type ComputedRef, type Ref } from 'vue'
-import type { ITodo } from './ITodo'
-import { Todo } from './Todo'
-import type { ITodoData } from './ITodoData'
+import { computed, ref, type ComputedRef, type Ref } from 'vue'
+import { Todo, type ITodo, type ITodoConstructor, type ITodoData } from './Todo.model'
 import { simultatedHttpGet, simultatedHttpPost } from './TodoMockData'
 
 interface IListStore<T> {
@@ -57,12 +55,12 @@ class TodoMockDataStore implements IListStore<ITodo> {
    * Update an existing todo, or
    * create a new todo at the end of the array if it doesn't exists.
    */
-  set = async (todo: ITodo): Promise<void> => {
+  set = async (todo: ITodoConstructor): Promise<void> => {
     const foundIndex = this.todos.value.findIndex((t) => t.id === todo.id)
     if (foundIndex === -1) {
-      this.todos.value.push(todo)
+      this.todos.value.push(new Todo(todo))
     } else {
-      this.todos.value[foundIndex] = todo
+      this.todos.value[foundIndex] = new Todo(todo)
     }
     await this.saveAll()
   }

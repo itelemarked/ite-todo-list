@@ -1,5 +1,5 @@
 <template>
-  <div v-for="todo in todos">
+  <div v-for="todo in todos" :key="todo.id">
     <todo-list-item :todo="todo" :key="todo.id" />
   </div>
 </template>
@@ -7,16 +7,16 @@
 <style></style>
 
 <script setup lang="ts">
-  import { computed, watch, type Ref } from 'vue'
+  import { watch, type Ref } from 'vue'
   import TodoListItem from './TodoListItem.vue'
   import { useTodoStore } from './useTodoStore'
-  import { Todo } from './Todo'
+  import { Todo } from './Todo.model'
 
   /*
    * DESTRUCTURING POSSIBLE ONLY IF getTodos WRITTEN AS A FUNCTION EXPRESSION --> IT BECOMES A PROPERTY OF THE INSTANCE,
    * INSTEAD OF FUNCTION DECLARATION --> IT IS PART OF THE PROTOTYPE OF THE INSTANCE
    */
-  const { getAll, set, remove, getById } = useTodoStore()
+  const { getAll, set, getById } = useTodoStore()
   const todos: Ref<Todo[]> = getAll()
 
   setTimeout(async () => {
@@ -29,3 +29,4 @@
     // remove('1')
   }, 2000)
 </script>
+

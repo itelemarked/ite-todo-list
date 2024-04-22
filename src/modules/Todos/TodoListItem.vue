@@ -17,7 +17,7 @@
 <script setup lang="ts">
   import { IonButton } from '@ionic/vue'
   import { computed } from 'vue'
-  import { type ITodo } from './ITodo'
+  import { type ITodo } from './Todo.model'
 
   const props = defineProps<{
     todo: ITodo
