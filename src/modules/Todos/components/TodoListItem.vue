@@ -3,7 +3,7 @@
     id: {{ id }} <br />
     title: {{ title }} <br />
     completed: {{ completed }} <br />
-    toString: {{ toString }} <br />
+    toString: <span style="font-size: 0.7em">{{ toString }}</span> <br />
     <ion-button size="small" @click="toggle()">toggle completed</ion-button>
   </p>
 </template>
@@ -17,7 +17,7 @@
 <script setup lang="ts">
   import { IonButton } from '@ionic/vue'
   import { computed } from 'vue'
-  import { type ITodo } from './Todo.model'
+  import { type ITodo } from '../models/Todo.model'
 
   const props = defineProps<{
     todo: ITodo

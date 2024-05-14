@@ -1,13 +1,17 @@
-
 export interface ITodoConstructor {
   id?: string
   title: string
   completed?: boolean
 }
 
-export type ITodoData = Required<ITodoConstructor>
+// export type ITodoData = Required<ITodoConstructor>
+export type ITodoData = {
+  title: string
+  completed: boolean
+}
 
 export interface ITodo extends ITodoData {
+  id: string
   toString: () => string
   toggleCompleted: () => void
   toData: () => ITodoData
